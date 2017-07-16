@@ -25,7 +25,7 @@
 
       subroutine calctide(iyr, imo, idy, glad, glod, iret, 
      &     retr, ierr)
-* iyr	year    [1980-2016]
+* iyr	year    [1980-2017]
 * imo	month number [1-12]
 * idy	day          [1-31]
 * glad	Lat. (pos N.) [- 90, +90]
@@ -725,9 +725,7 @@
 
       implicit double precision(a-h,o-z)
       dimension rm(3)
-
       common/stuff/rad,pi,pi2
-      call initialize()
 
 *** use TT for lunar ephemerides
 
@@ -838,9 +836,7 @@
 *** section 2.3.1, pg. 33
 
       implicit double precision(a-h,o-z)
-
       common/stuff/rad,pi,pi2
-      call initialize()
 
 *** need UT to get sidereal time  ("astronomy on the personal computer", 4th ed)
 ***                               (pg.43, montenbruck & pfleger, springer, 2005)
@@ -886,9 +882,7 @@
 
       implicit double precision(a-h,o-z)
       dimension rs(3)
-
       common/stuff/rad,pi,pi2
-      call initialize()
 
 *** mean elements for year 2000, sun ecliptic orbit wrt. Earth
 
@@ -963,9 +957,7 @@
 *** convert geodetic lat, long, ellip ht. to x,y,z
 
       implicit double precision(a-h,o-z)
-
       common/comgrs/a,e2
-      call initialize()
 
       sla=dsin(gla)
       cla=dcos(gla)
@@ -1046,11 +1038,7 @@
       save /mjdoff/
       common/mjdoff/mjd0
 
-      if(iyr.lt.1900) then
-*stop 34587
-        ierr = 34587
-        goto 400
-      end if
+      if(iyr.lt.1900) stop 34587
 
       if(imo.le.2) then
         y=iyr-1
@@ -1069,10 +1057,6 @@
       mjd0=mjd
 
       return
-
-*** error - return
-  400 return
-
       end
       subroutine civjts(iyr,imo,idy,ihr,imn,sec,tsec)
 
@@ -1089,11 +1073,7 @@
       save /mjdoff/
       common/mjdoff/mjd0
 
-      if(iyr.lt.1900) then
-*stop 34589
-        ierr = 34589
-        goto 400
-      end if
+      if(iyr.lt.1900) stop 34589
 
       if(imo.le.2) then
         y=iyr-1
@@ -1110,10 +1090,6 @@
       tsec=(mjd-mjd0)*86400.d0+3600*ihr+60*imn+sec
 
       return
-
-*** error - return
-  400 return
-
       end
       subroutine jtsciv(tsec,iyr,imo,idy,ihr,imn,sec)
 
@@ -1171,11 +1147,7 @@
       implicit double precision(a-h,o-z)
       integer y
 
-      if(iyr.lt.1900)  then
-*stop 34588
-        ierr = 34588
-        goto 400
-      end if
+      if(iyr.lt.1900) stop 34588
 
       if(imo.le.2) then
         y=iyr-1
@@ -1192,10 +1164,6 @@
       fmjd=(3600*ihr+60*imn+sec)/86400.d0
 
       return
-
-*** error - return
-  400 return
-
       end
       subroutine mjdciv(mjd,fmjd,iyr,imo,idy,ihr,imn,sec)
 
@@ -1289,7 +1257,9 @@
 ***** parameter(mjdhard=57022)            !*** cut-off date 2014dec31
 ***** parameter(mjdhard=57203)            !*** cut-off date 2015jun30
 ***** parameter(mjdhard=57387)            !*** cut-off date 2015dec31
-      parameter(mjdhard=57569)            !*** cut-off date 2016jun30
+***** parameter(mjdhard=57569)            !*** cut-off date 2016jun30
+***** parameter(mjdhard=57753)            !*** cut-off date 2016dec31
+      parameter(mjdhard=57934)            !*** cut-off date 2017jun30
 
       save  /mjdoff/
       common/mjdoff/mjd0
@@ -1314,19 +1284,15 @@
 *** test date limits
 
       if(mjd0t.gt.mjdhard) then
-*        write(*,*) 'FATAL ERROR --'
-*        write(*,*) 'exceeded cut-off date in gpsleap()'
-*        stop 66766
-        ierr = 66766
-        goto 400
+        write(*,*) 'FATAL ERROR --'
+        write(*,*) 'exceeded cut-off date in gpsleap()'
+        stop 66766
       endif
 
       if(mjd0t.lt.44244) then             !*** 1980jan06
-*        write(*,*) 'FATAL ERROR --'
-*        write(*,*) 'cut-off date underflow in gpsleap()'
-*        stop 66767
-        ierr = 66767
-        goto 400
+        write(*,*) 'FATAL ERROR --'
+        write(*,*) 'cut-off date underflow in gpsleap()'
+        stop 66767
       endif
 
 *** http://maia.usno.navy.mil/ser7/tai-utc.dat
@@ -1348,10 +1314,13 @@
 *** 2009 JAN  1 =JD 2454832.5  TAI-UTC=  34.0s
 *** 2012 JUL  1 =JD 2456109.5  TAI-UTC=  35.0s
 *** 2015 JUL  1 =JD 2457204.5  TAI-UTC=  36.0s
+*** 2017 JAN  1 =JD 2457754.5  TAI-UTC=  37.0s
 
 *** test against newest leaps first
 
-      if    (mjd0t.ge.57204) then       !*** 2015 JUL 1 = 57204
+      if    (mjd0t.ge.57754) then       !*** 2017 JAN 1 = 57754
+        tai_utc = 37.d0
+      elseif(mjd0t.ge.57204) then       !*** 2015 JUL 1 = 57204
         tai_utc = 36.d0
       elseif(mjd0t.ge.56109) then       !*** 2012 JUL 1 = 56109
         tai_utc = 35.d0
@@ -1391,20 +1360,15 @@
 *** should never get here
 
       else
-*        write(*,*) 'FATAL ERROR --'
-*        write(*,*) 'fell thru tests in gpsleap()'
-*        stop 66768
-      ierr = 66768
-      goto 400
+        write(*,*) 'FATAL ERROR --'
+        write(*,*) 'fell thru tests in gpsleap()'
+        stop 66768
       endif
 
 *** convert TAI-UTC into GPS leap seconds
 
       gpsleap = tai_utc - 19.d0
 
-*      return
-
-*** error - return
-  400 return
+      return
       end
 
