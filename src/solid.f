@@ -25,7 +25,7 @@
 
       subroutine calctide(iyr, imo, idy, glad, glod, iret, 
      &     retr, ierr)
-* iyr	year    [1980-2017]
+* iyr	year    [1980-2018]
 * imo	month number [1-12]
 * idy	day          [1-31]
 * glad	Lat. (pos N.) [- 90, +90]
@@ -1259,7 +1259,9 @@
 ***** parameter(mjdhard=57387)            !*** cut-off date 2015dec31
 ***** parameter(mjdhard=57569)            !*** cut-off date 2016jun30
 ***** parameter(mjdhard=57753)            !*** cut-off date 2016dec31
-      parameter(mjdhard=57934)            !*** cut-off date 2017jun30
+***** parameter(mjdhard=57934)            !*** cut-off date 2017jun30
+***** parameter(mjdhard=58118)            !*** cut-off date 2017dec31
+      parameter(mjdhard=58299)            !*** cut-off date 2018jun30
 
       save  /mjdoff/
       common/mjdoff/mjd0
