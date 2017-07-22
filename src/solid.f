@@ -1321,9 +1321,9 @@
 *** test against newest leaps first
 
       if    (mjd0t.ge.57754) then       !*** 2017 JAN 1 = 57754
-        tai_utc = 35.d0
+        tai_utc = 37.d0
       elseif(mjd0t.ge.57204) then       !*** 2015 JUL 1 = 57204
-        tai_utc = 35.d0
+        tai_utc = 36.d0
       elseif(mjd0t.ge.56109) then       !*** 2012 JUL 1 = 56109
         tai_utc = 35.d0
       elseif(mjd0t.ge.54832) then       !*** 2009 JAN 1 = 54832
